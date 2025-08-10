@@ -1,0 +1,100 @@
+﻿@page "/users/register"
+@using TimeTrackerClient.Services.Base
+@inject IClient httpClient
+@inject NavigationManager navManager
+
+<h3>Register</h3>
+@if(string.IsNullOrEmpty(message) == false)
+{
+    <div class="alert alert-danger">
+        <p>@message</p>
+    </div>
+}
+
+<div>
+    <EditForm Model="registerModel" OnValidSubmit="HandleRegistration">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <InputText class="form-control" @bind-Value = "registerModel.Email"/>
+            <ValidationMessage For="@(() => registerModel.Email)" />
+        </div>
+        <div class="form-group">
+            <label for="fullname">Full Name</label>
+            <InputText class="form-control" @bind-Value="registerModel.FullName" />
+            <ValidationMessage For="@(() => registerModel.FullName)" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <InputText class="form-control" @bind-Value="registerModel.Password" />
+            <ValidationMessage For="@(() => registerModel.Password)" />
+        </div>
+
+        @* <div>
+            <label>Email:</label>
+            <InputText @bind-Value="registerModel.Email" class="form-control" />
+        </div>
+
+        <div>
+            <label>Password:</label>
+            <InputText @bind-Value="registerModel.Password" type="password" class="form-control" />
+        </div>
+
+        <div>
+            <label>Full Name:</label>
+            <InputText @bind-Value="registerModel.FullName" class="form-control" />
+        </div>
+
+        <div>
+            <label>Hourly Wage:</label>
+            <InputNumber @bind-Value="registerModel.HourlyWage" class="form-control" />
+        </div>
+
+        <div>
+            <label>Personal Number:</label>
+            <InputText @bind-Value="registerModel.PersonalNumber" class="form-control" />
+        </div>
+
+        <div>
+            <label>Phone Number:</label>
+            <InputText @bind-Value="registerModel.PhoneNumber" class="form-control" />
+        </div>
+
+        <div>
+            <label>Address:</label>
+            <InputText @bind-Value="registerModel.Address" class="form-control" />
+        </div>
+
+        <div>
+            <label>Emergency Contact:</label>
+            <InputText @bind-Value="registerModel.EmergencyContact" class="form-control" />
+        </div> *@
+
+        <button type="submit" class="btn btn-primary">Register</button>
+    </EditForm>
+</div>
+
+
+@code {
+    UserDto registerModel = new UserDto();
+    string message = string.Empty;
+
+    private async Task HandleRegistration()
+    {
+        try
+        {
+            await httpClient.RegisterAsync(registerModel);
+        }
+        catch (ApiException ex)
+        {
+            if (ex.StatusCode >= 200 && ex.StatusCode <= 299)
+            {
+                navManager.NavigateTo("/users/login");
+            }
+            message = ex.Response;
+        }
+
+    }
+}

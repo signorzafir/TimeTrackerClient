@@ -1,0 +1,16 @@
+﻿@page "/employee/overview"
+@using TimeTrackerClient.Services.Base
+@using TimeTrackerClient.Services.Employee
+@inject IEmployeeService employeeService
+@inject NavigationManager navManager
+@inject IJSRuntime jSRuntime
+
+<h3>EmployeeOverview</h3>
+
+
+
+@code {
+    private IEnumerable<EmployeeReadDto>? employees;
+    
+    
+}

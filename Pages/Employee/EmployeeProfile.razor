@@ -1,0 +1,149 @@
+﻿@page "/employee/profile"
+@using Microsoft.AspNetCore.Components.Authorization
+@using TimeTrackerClient.Providers
+@using TimeTrackerClient.Services.Base
+@using TimeTrackerClient.Services.Employee
+@inject IEmployeeService employeeService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider authStateProvider
+
+<h3 style="margin-bottom: 20px;">My Profile</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div style="color: red; margin-bottom: 10px;">@errorMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div style="color: green; margin-bottom: 10px;">@successMessage</div>
+}
+
+@if (isLoading)
+{
+    <p>Loading profile...</p>
+}
+else if (employee is not null)
+{
+    <div style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; max-width: 500px; margin-bottom: 20px;">
+        <h4 style="margin-bottom: 10px;">Profile Information</h4>
+        <p><strong>Personal Number:</strong> @employee.PersonalNumber</p>
+        @* <p><strong>User ID:</strong> @employee.UserId</p> *@
+        <p><strong>Work Entries:</strong> @(employee.WorkEntries?.Count ?? 0)</p>
+    </div>
+
+    <EditForm Model="updateDto" OnValidSubmit="HandleUpdate" style="max-width: 500px;">
+        <DataAnnotationsValidator />
+        <ValidationSummary style="color: red;" />
+
+        <div style="margin-bottom: 10px;">
+            <label>Full Name</label>
+            <InputText @bind-Value="updateDto.FullName" style="width: 100%; padding: 5px;" />
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <label>Phone Number</label>
+            <InputText @bind-Value="updateDto.PhoneNumber" style="width: 100%; padding: 5px;" />
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <label>Address</label>
+            <InputText @bind-Value="updateDto.Address" style="width: 100%; padding: 5px;" />
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <label>Emergency Contact</label>
+            <InputText @bind-Value="updateDto.EmergencyContact" style="width: 100%; padding: 5px;" />
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <label>Hourly Wage</label>
+            <InputNumber @bind-Value="updateDto.HourlyWage" style="width: 100%; padding: 5px;" />
+        </div>
+
+        <div style="margin-top: 15px;">
+            <button type="submit" style="padding: 6px 12px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Save Changes</button>
+        </div>
+    </EditForm>
+}
+
+@code {
+    private EmployeeReadDto? employee;
+    private EmployeeUpdateDto updateDto = new();
+    private string? successMessage;
+    private string? errorMessage;
+    private bool isLoading = true;
+    private int userEmployeeId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Get user claims from auth provider
+            var claims = await ((ApiAuthenticationStateProvider)authStateProvider).GetClaims();
+            if (claims == null)
+            {
+                Navigation.NavigateTo("/users/login");
+                return;
+            }
+
+            string? rid = claims.FirstOrDefault(x => x.Type == "rid")?.Value;
+            if (string.IsNullOrEmpty(rid))
+            {
+                errorMessage = "Unable to determine your profile ID.";
+                isLoading = false;
+                return;
+            }
+
+            userEmployeeId = Convert.ToInt32(rid);
+
+            // Load employee profile
+            var response = await employeeService.GetEmployeeByIdAsync(userEmployeeId);
+            if (response.Success && response.Data != null)
+            {
+                employee = response.Data;
+
+                // Fill update DTO with editable fields
+                updateDto.FullName = employee.FullName;
+                updateDto.PhoneNumber = employee.PhoneNumber;
+                updateDto.Address = employee.Address;
+                updateDto.EmergencyContact = employee.EmergencyContact;
+                updateDto.HourlyWage = employee.HourlyWage;
+            }
+            else
+            {
+                errorMessage = response.Message ?? "Failed to load profile.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Unexpected error: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleUpdate()
+    {
+        successMessage = null;
+        errorMessage = null;
+
+        var response = await employeeService.UpdateEmployeeAsync(userEmployeeId, updateDto);
+
+        if (response.Success)
+        {
+            successMessage = response.Message;
+
+            // Refresh employee data
+            var refreshed = await employeeService.GetEmployeeByIdAsync(userEmployeeId);
+            if (refreshed.Success)
+                employee = refreshed.Data;
+        }
+        else
+        {
+            errorMessage = response.Message ?? "Update failed.";
+        }
+    }
+}

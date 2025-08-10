@@ -1,0 +1,55 @@
+﻿@page "/users/login"
+@using TimeTrackerClient.Services.Authentication
+@using TimeTrackerClient.Services.Base
+@inject IAuthenticationService authService
+@inject NavigationManager navManager
+
+<h3>Login</h3>
+
+<div>
+    <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <InputText class="form-control" @bind-Value="LoginModel.Email" />
+            <ValidationMessage For="@(() => LoginModel.Email)" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <InputText class="form-control" @bind-Value="LoginModel.Password" />
+            <ValidationMessage For="@(() => LoginModel.Password)" />
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </EditForm>
+</div>
+
+
+@code {
+    LoginUserDto LoginModel = new LoginUserDto();
+
+    private async Task HandleLogin(EditContext args)
+    {
+        string message = string.Empty;
+        try
+        {
+            var response = await authService.AuthenticateAsync(LoginModel);
+            if (response)
+            {
+                navManager.NavigateTo("/");
+            }
+            message = "Invalid Credentials";
+        }
+        catch (ApiException ex)
+        {
+            if(ex.StatusCode >= 200 && ex.StatusCode <= 299)
+            {
+                navManager.NavigateTo("/");
+            }
+            message = ex.Response;
+        }
+
+    }
+}
