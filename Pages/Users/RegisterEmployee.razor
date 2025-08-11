@@ -80,7 +80,7 @@
 
         if (response.Success)
         {
-            successMessage = response.Message;
+            successMessage = "Registration Successfull";
             dto = new(); // Clear form
         }
         else
@@ -88,30 +88,4 @@
             errorMessage = response.Message ?? "Registration failed.";
         }
     }
-    // private async Task RegisterNewEmployee()
-    // {
-    //     successMessage = null;
-    //     errorMessage = null;
-
-    //     try
-    //     {
-    //         var response = await employeeService.RegisterEmployeeAsync(dto);
-
-    //         if (response.IsSuccessStatusCode)
-    //         {
-    //             successMessage = "Employee registered successfully!";
-    //             dto = new(); // Clear form
-    //         }
-    //         else
-    //         {
-    //             var error = await response.Content.ReadAsStringAsync();
-    //             errorMessage = $"Error: {error}";
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         errorMessage = $"Unexpected error: {ex.Message}";
-    //     }
-    // }
-
 }

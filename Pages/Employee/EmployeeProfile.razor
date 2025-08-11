@@ -9,7 +9,7 @@
 
 <h3 style="margin-bottom: 20px;">My Profile</h3>
 
-@if (!string.IsNullOrEmpty(errorMessage))
+@if (string.IsNullOrEmpty(errorMessage))
 {
     <div style="color: red; margin-bottom: 10px;">@errorMessage</div>
 }
