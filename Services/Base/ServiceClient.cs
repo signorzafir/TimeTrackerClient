@@ -1721,7 +1721,7 @@ namespace TimeTrackerClient.Services.Base
         public System.DateTimeOffset Date { get; set; }
 
         [Newtonsoft.Json.JsonProperty("duration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TimeSpan Duration { get; set; }
+        public System.TimeSpan Duration { get; set; }
 
         [Newtonsoft.Json.JsonProperty("wageForEntry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double WageForEntry { get; set; }
@@ -1735,7 +1735,7 @@ namespace TimeTrackerClient.Services.Base
         public System.DateTimeOffset Date { get; set; }
 
         [Newtonsoft.Json.JsonProperty("duration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TimeSpan Duration { get; set; }
+        public System.TimeSpan Duration { get; set; }
 
         [Newtonsoft.Json.JsonProperty("wageForEntry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double WageForEntry { get; set; }
