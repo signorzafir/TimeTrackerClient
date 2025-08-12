@@ -1,4 +1,4 @@
-﻿@page "/admin/employees"
+﻿@page "/admin/employees1"
 @using Microsoft.AspNetCore.Authorization
 @using TimeTrackerClient.Services.Base
 @using TimeTrackerClient.Services.Employee
@@ -17,7 +17,7 @@
                     <h3 class="mb-0">
                         <i class="fas fa-users me-2"></i>Employees Management
                     </h3>
-                    <div class="d-flex gap-2">
+                    @* <div class="d-flex gap-2">
                         <div class="input-group" style="width: 300px;">
                             <span class="input-group-text">
                                 <i class="fas fa-search"></i>
@@ -28,7 +28,7 @@
                         <button class="btn btn-primary" @onclick="NavigateToCreate">
                             <i class="fas fa-plus me-2"></i>Add Employee
                         </button>
-                    </div>
+                    </div> *@
                 </div>
                 <div class="card-body">
                     @if (isLoading)
@@ -40,7 +40,7 @@
                             <p class="mt-2">Loading employees...</p>
                         </div>
                     }
-                    else if (filteredEmployees.Any())
+                    @* else if (filteredEmployees.Any())
                     {
                         <!-- Summary Cards -->
                         <div class="row mb-4">
@@ -74,7 +74,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> *@
 
                         <!-- Employees Table -->
                         <div class="table-responsive">
@@ -112,7 +112,7 @@
                                                     <div>
                                                         <strong>@employee.FullName</strong>
                                                         <br />
-                                                        <small class="text-muted">ID: @employee.PersonalNumber</small>
+                                                        <small class="text-muted">Personal Number: @employee.PersonalNumber</small>
                                                     </div>
                                                 </div>
                                             </td>
@@ -163,8 +163,8 @@
                                 </tbody>
                             </table>
                         </div>
-                    }
-                    else
+                    
+                    @* else
                     {
                         <div class="text-center text-muted py-5">
                             <i class="fas fa-users fa-4x mb-3"></i>
@@ -177,7 +177,7 @@
                                 </button>
                             }
                         </div>
-                    }
+                    } *@
 
                     @if (!string.IsNullOrEmpty(errorMessage))
                     {
