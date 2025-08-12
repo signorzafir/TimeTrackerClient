@@ -5,7 +5,7 @@
 @using TimeTrackerClient.Services.Base
 @using TimeTrackerClient.Services.Employee
 
-<h3 style="margin-bottom: 20px;">Register Employee</h3>
+@* <h3 style="margin-bottom: 20px;">Register Employee</h3>
 
 @if (!string.IsNullOrEmpty(successMessage))
 {
@@ -63,6 +63,69 @@
 
     <div>
         <button type="submit" style="padding: 6px 12px; background-color: #4CAF50; color: white; border: none;">Register</button>
+    </div>
+</EditForm> *@
+<h3 style="margin-bottom: 24px; color: #2C3E50; font-weight: 600;">Register Employee</h3>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div style="color: #27ae60; margin-bottom: 16px; font-weight: 500;">@successMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div style="color: #e74c3c; margin-bottom: 16px; font-weight: 500;">@errorMessage</div>
+}
+
+<EditForm Model="dto" OnValidSubmit="HandleRegister" style="max-width: 420px; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <DataAnnotationsValidator />
+    <ValidationSummary style="color: #e74c3c; margin-bottom: 20px;" />
+
+    @* Form group styling *@
+    <div style="margin-bottom: 16px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #34495e;">Email</label>
+        <InputText @bind-Value="dto.Email" style="width: 100%; padding: 8px 12px; border: 1.5px solid #bdc3c7; border-radius: 6px; font-size: 1rem;" />
+    </div>
+
+    <div style="margin-bottom: 16px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #34495e;">Password</label>
+        <InputText @bind-Value="dto.Password" type="password" style="width: 100%; padding: 8px 12px; border: 1.5px solid #bdc3c7; border-radius: 6px; font-size: 1rem;" />
+    </div>
+
+    <div style="margin-bottom: 16px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #34495e;">Full Name</label>
+        <InputText @bind-Value="dto.FullName" style="width: 100%; padding: 8px 12px; border: 1.5px solid #bdc3c7; border-radius: 6px; font-size: 1rem;" />
+    </div>
+
+    <div style="margin-bottom: 16px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #34495e;">Hourly Wage</label>
+        <InputNumber @bind-Value="dto.HourlyWage" style="width: 100%; padding: 8px 12px; border: 1.5px solid #bdc3c7; border-radius: 6px; font-size: 1rem;" />
+    </div>
+
+    <div style="margin-bottom: 16px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #34495e;">Personal Number</label>
+        <InputText @bind-Value="dto.PersonalNumber" style="width: 100%; padding: 8px 12px; border: 1.5px solid #bdc3c7; border-radius: 6px; font-size: 1rem;" />
+    </div>
+
+    <div style="margin-bottom: 16px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #34495e;">Phone Number</label>
+        <InputText @bind-Value="dto.PhoneNumber" style="width: 100%; padding: 8px 12px; border: 1.5px solid #bdc3c7; border-radius: 6px; font-size: 1rem;" />
+    </div>
+
+    <div style="margin-bottom: 16px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #34495e;">Address</label>
+        <InputText @bind-Value="dto.Address" style="width: 100%; padding: 8px 12px; border: 1.5px solid #bdc3c7; border-radius: 6px; font-size: 1rem;" />
+    </div>
+
+    <div style="margin-bottom: 24px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #34495e;">Emergency Contact</label>
+        <InputText @bind-Value="dto.EmergencyContact" style="width: 100%; padding: 8px 12px; border: 1.5px solid #bdc3c7; border-radius: 6px; font-size: 1rem;" />
+    </div>
+
+    <div>
+        <button type="submit" style="width: 100%; padding: 12px; background-color: #27ae60; color: white; font-weight: 600; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: background-color 0.3s ease;">
+            Register
+        </button>
     </div>
 </EditForm>
 

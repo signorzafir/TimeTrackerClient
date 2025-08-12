@@ -7,7 +7,7 @@
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider authStateProvider
 
-<h3 style="margin-bottom: 20px;">My Profile</h3>
+@* <h3 style="margin-bottom: 20px;">My Profile</h3>
 
 @if (string.IsNullOrEmpty(errorMessage))
 {
@@ -28,7 +28,6 @@ else if (employee is not null)
     <div style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; max-width: 500px; margin-bottom: 20px;">
         <h4 style="margin-bottom: 10px;">Profile Information</h4>
         <p><strong>Personal Number:</strong> @employee.PersonalNumber</p>
-        @* <p><strong>User ID:</strong> @employee.UserId</p> *@
         <p><strong>Work Entries:</strong> @(employee.WorkEntries?.Count ?? 0)</p>
     </div>
 
@@ -65,7 +64,69 @@ else if (employee is not null)
             <button type="submit" style="padding: 6px 12px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Save Changes</button>
         </div>
     </EditForm>
+} *@
+<h3 style="margin-bottom: 20px; color: #2c3e50; font-weight: 600;">My Profile</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div style="color: red; margin-bottom: 15px; font-weight: 600;">@errorMessage</div>
 }
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div style="color: green; margin-bottom: 15px; font-weight: 600;">@successMessage</div>
+}
+
+@if (isLoading)
+{
+    <p style="color: #777; font-style: italic;">Loading profile...</p>
+}
+else if (employee is not null)
+{
+    <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px; max-width: 520px; margin-bottom: 30px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h4 style="margin-bottom: 15px; color: #34495e;">Profile Information</h4>
+        <p><strong>Personal Number:</strong> <span style="color: #555;">@employee.PersonalNumber</span></p>
+        @* <p><strong>User ID:</strong> <span style="color: #555;">@employee.UserId</span></p> *@
+        <p><strong>Work Entries:</strong> <span style="color: #555;">@(employee.WorkEntries?.Count ?? 0)</span></p>
+    </div>
+
+    <EditForm Model="updateDto" OnValidSubmit="HandleUpdate" style="max-width: 520px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <DataAnnotationsValidator />
+        <ValidationSummary style="color: red; margin-bottom: 15px;" />
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Full Name</label>
+            <InputText @bind-Value="updateDto.FullName" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Phone Number</label>
+            <InputText @bind-Value="updateDto.PhoneNumber" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Address</label>
+            <InputText @bind-Value="updateDto.Address" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Emergency Contact</label>
+            <InputText @bind-Value="updateDto.EmergencyContact" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Hourly Wage</label>
+            <InputNumber @bind-Value="updateDto.HourlyWage" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+        </div>
+
+        <div>
+            <button type="submit" style="padding: 10px 18px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease;">
+                Save Changes
+            </button>
+        </div>
+    </EditForm>
+}
+
 
 @code {
     private EmployeeReadDto? employee;

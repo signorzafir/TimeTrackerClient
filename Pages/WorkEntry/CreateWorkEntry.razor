@@ -1,0 +1,118 @@
+﻿@page "/workEntry/create"
+@* @using TimeTrackerClient.Services.WorkEntry
+@inject IWorkEntryService workEntryService
+@inject NavigationManager navManager
+
+<h3>CreateWorkEntry</h3>
+
+@code {
+    
+
+} *@
+@* @page "/employee/create-work-entry" *@
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@using TimeTrackerClient.Services.Base
+@using TimeTrackerClient.Services.WorkEntry
+@attribute [Authorize(Roles = "User")]
+@inject IWorkEntryService WorkEntryService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+<h3>Create Work Entry</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div style="color: red; margin-bottom: 10px;">
+        @errorMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div style="color: green; margin-bottom: 10px;">
+        @successMessage
+    </div>
+}
+
+<form @onsubmit="HandleWorkEntry" @onsubmit:preventDefault="true">
+    <div>
+        <label for="date">Date:</label>
+        <input type="date" id="date" @bind="workEntry.Date" required />
+    </div>
+    <br />
+
+    <div>
+        <label for="hours">Hours:</label>
+        <input type="number" id="hours" @bind="hours" min="0" max="23" step="1" required />
+    </div>
+    <br />
+
+    <div>
+        <label for="minutes">Minutes:</label>
+        <input type="number" id="minutes" @bind="minutes" min="0" max="59" step="1" required />
+    </div>
+    <br />
+
+    <div>
+        <label for="employeeId">Employee ID:</label>
+        <input type="number" id="employeeId" @bind="workEntry.EmployeeId" required />
+    </div>
+    <br />
+
+    <button type="submit" disabled="@isLoading">
+        @if (isLoading)
+        {
+            <text>Creating...</text>
+        }
+        else
+        {
+            <text>Create Work Entry</text>
+        }
+    </button>
+</form>
+
+@code {
+    private WorkEntryCreateDto workEntry = new ();
+    private int hours = 0;
+    private int minutes = 0;
+    private bool isLoading = false;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+
+    private async Task HandleWorkEntry()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = string.Empty;
+            successMessage = string.Empty;
+
+            // Convert hours and minutes to TimeSpan
+            workEntry.Duration = new System.TimeSpan(hours, minutes, 0);
+
+            var response = await WorkEntryService.CreateAsync(workEntry);
+
+            if (response.Success)
+            {
+                successMessage = response.Message;
+                // Reset form
+                workEntry = new WorkEntryCreateDto();
+                hours = 0;
+                minutes = 0;
+            }
+            else
+            {
+                errorMessage = response.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An unexpected error occurred while creating the work entry.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

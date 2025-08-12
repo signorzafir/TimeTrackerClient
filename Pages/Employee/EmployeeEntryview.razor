@@ -1,0 +1,151 @@
+﻿@page "/employee/entries"
+ @using System.Security.Claims 
+ @using Microsoft.AspNetCore.Components.Authorization 
+ @using TimeTrackerClient.Providers 
+ @using TimeTrackerClient.Services.Base 
+ @using TimeTrackerClient.Services.Employee 
+ @using TimeTrackerClient.Services.WorkEntry  
+ @inject AuthenticationStateProvider authStateProvider 
+ @inject IEmployeeService employeeService 
+ @inject IWorkEntryService workEntryService
+ @inject NavigationManager navManager
+ @inject IJSRuntime JSRuntime 
+
+
+
+ @* <div>
+    @if (entries == null)
+    {
+        <p class="text-center">Loading...</p>
+    }
+    else if (!entries.Any())
+    {
+        <p>No work entries to display.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Employee Id</th>
+                    <th>Employee Name</th>
+                    <th>Date</th>
+                    <th>Duration</th>
+                    <th>Wage for Entry</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in entries)
+                {
+                    <tr>
+                        <td>@entry.EmployeeId</td>
+                        <td>@entry.EmployeeName</td>
+                        <td>@entry.Date.ToString("yyyy-MM-dd")</td>
+                        <td>@entry.Duration.ToString(@"hh\:mm")</td>
+                        <td>@entry.WageForEntry.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="fw-bold bg-primary text-white">
+                    <td colspan="2">Total</td>
+                    <td></td>
+                    <td>@string.Format("{0}:{1:D2}", (int)TotalDuration.TotalHours, TotalDuration.Minutes)</td>
+                    <td>@TotalWage.ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+</div> *@
+<div style="margin-top: 2rem;">
+    @if (entries == null)
+    {
+        <p style="text-align: center; font-size: 1.1rem; color: #7f8c8d;">Loading...</p>
+    }
+    else if (!entries.Any())
+    {
+        <p style="text-align: center; font-size: 1.1rem; color: #7f8c8d;">No work entries to display.</p>
+    }
+    else
+    {
+        <table class="table"
+               style="border-collapse: separate; border-spacing: 0; width: 100%; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 3px 8px rgba(0,0,0,0.1);">
+            <thead style="background-color: #2C3E50; color: white;">
+                <tr>
+                    <th style="padding: 0.8rem;">Employee Id</th>
+                    <th style="padding: 0.8rem;">Employee Name</th>
+                    <th style="padding: 0.8rem;">Date</th>
+                    <th style="padding: 0.8rem;">Duration</th>
+                    <th style="padding: 0.8rem;">Wage for Entry</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in entries)
+                {
+                    <tr style="border-bottom: 1px solid #ecf0f1; transition: background-color 0.2s;">
+                        <td style="padding: 0.8rem;">@entry.EmployeeId</td>
+                        <td style="padding: 0.8rem;">@entry.EmployeeName</td>
+                        <td style="padding: 0.8rem;">@entry.Date.ToString("yyyy-MM-dd")</td>
+                        <td style="padding: 0.8rem;">@entry.Duration.ToString(@"hh\:mm")</td>
+                        <td style="padding: 0.8rem;">@entry.WageForEntry.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr style="background-color: #1ABC9C; color: white; font-weight: bold;">
+                    <td style="padding: 0.8rem;" colspan="2">Total</td>
+                    <td></td>
+                    <td style="padding: 0.8rem;">@string.Format("{0}:{1:D2}", (int)TotalDuration.TotalHours, TotalDuration.Minutes)</td>
+                    <td style="padding: 0.8rem;">@TotalWage.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+</div>
+
+<style>
+    table tbody tr:hover {
+        background-color: #f9f9f9;
+    }
+</style>
+
+
+@code {
+    private IEnumerable<WorkEntryReadDto>? entries;
+    private System.TimeSpan TotalDuration => System.TimeSpan.FromMinutes(entries.Sum(e => e.Duration.TotalMinutes));
+    
+    private double TotalWage => entries.Sum(e => e.WageForEntry);
+    private ApiResponse<IEnumerable<WorkEntryReadDto>>? apiResponse = new ApiResponse<IEnumerable<WorkEntryReadDto>> { Success = true };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IEnumerable<Claim>? claims = await ((ApiAuthenticationStateProvider)authStateProvider).GetClaims();
+
+            if (claims == null)
+            {
+                navManager.NavigateTo("users/login");
+                return;
+            }
+
+            string? rid = claims.FirstOrDefault(x => x.Type == "rid")?.Value;
+
+            if (rid == null) 
+            {
+                return;
+            }
+
+            apiResponse = await workEntryService.GetByEmployeeAsync(Convert.ToInt32(rid));
+            if (apiResponse.Success)
+            {
+                entries = apiResponse.Data;
+                StateHasChanged();
+            }
+
+        }
+
+    }
+
+
+}

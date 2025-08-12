@@ -58,14 +58,14 @@ namespace TimeTrackerClient.Services.WorkEntry
             {
                 return ConvertApiExceptions<WorkEntryReadDto>(ex);
             }
-            catch (Exception ex)
-            {
-                return new ApiResponse<WorkEntryReadDto>
-                {
-                    Success = false,
-                    Message = "An unexpected error occurred while creating the work entry"
-                };
-            }
+            //catch (Exception ex)
+            //{
+            //    return new ApiResponse<WorkEntryReadDto>
+            //    {
+            //        Success = false,
+            //        Message = "An unexpected error occurred while creating the work entry"
+            //    };
+            //}
         }
 
         public async Task<ApiResponse<WorkEntryReadDto>> GetByIdAsync(int id)
