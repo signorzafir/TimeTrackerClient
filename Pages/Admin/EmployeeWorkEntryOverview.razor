@@ -1,0 +1,100 @@
+﻿@page "/admin/workEntriesByEmployee"
+@using TimeTrackerClient.Services.Base
+@using TimeTrackerClient.Services.Employee
+@using TimeTrackerClient.Services.WorkEntry
+@inject IEmployeeService employeeService
+@inject IWorkEntryService workEntryService
+
+<h3>Employee Work Entries</h3>
+
+@if (employees is null)
+{
+    <p>Loading employees...</p>
+}
+else
+{
+    <div class="mb-3 d-flex align-items-center gap-2">
+        <label>Select Employee:</label>
+        <select @bind="selectedEmployeeId" class="form-select" style="width: 200px;">
+            <option value="">-- Select Employee --</option>
+            @foreach (var emp in employees)
+            {
+                <option value="@emp.Id">@emp.FullName</option>
+            }
+        </select>
+
+        <button class="btn btn-primary" @onclick="LoadEntries" disabled="@(selectedEmployeeId == 0)">
+            Get Entries
+        </button>
+    </div>
+
+    @if (entries != null)
+    {
+        @if (entries.Any())
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>Wage</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in entries)
+                    {
+                        <tr>
+                            <td>@entry.Date.ToString("yyyy-MM-dd")</td>
+                            <td>@entry.Duration</td>
+                            <td>@entry.WageForEntry</td>
+                            @* <td>
+                                <button class="btn btn-danger btn-sm" @onclick="() => ConfirmDelete(entry.Id)">
+                                    Delete
+                                </button>
+                            </td> *@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No work entries for this employee.</p>
+        }
+    }
+}
+
+@code {
+    private List<EmployeeReadDto> employees = new();
+    private List<WorkEntryReadDto>? entries = new();
+    private int selectedEmployeeId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await employeeService.GetAllEmployeesAsync();
+        if (response.Success)
+        {
+            employees = response.Data.ToList();
+
+        }
+    }
+    private async Task LoadEntries()
+    {
+        if (selectedEmployeeId != 0)
+        {
+            var response = await workEntryService.GetByEmployeeAsync(selectedEmployeeId);
+            if (response.Success)
+            {
+                entries = response.Data.ToList();
+            }
+            
+        }
+        else
+        {
+            entries = null;
+        }
+
+        
+    }
+}
