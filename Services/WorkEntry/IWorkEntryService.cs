@@ -9,5 +9,6 @@ namespace TimeTrackerClient.Services.WorkEntry
         Task<ApiResponse<WorkEntryReadDto>> GetByIdAsync(int id);
         Task<ApiResponse<bool>> UpdateAsync(int id, WorkEntryUpdateDto dto);
         Task<ApiResponse<bool>> DeleteAsync(int id);
+        Task<ApiResponse<IEnumerable<WorkEntryReadDto>>> GetWorkEntryBySearch(int employeeId, WorkEntrySearchDto workEntrySearchDto);
     }
 }

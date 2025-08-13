@@ -1,0 +1,124 @@
+﻿@page "/employee/searchworkentry"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using TimeTrackerClient.Providers
+@using TimeTrackerClient.Services.Base
+@using TimeTrackerClient.Services.WorkEntry
+@inject IClient client
+@inject IWorkEntryService workEntryService
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+
+<div>
+    <header style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 5px; color: #2C3E50;">TimeTracker Client</h1>
+        <h2 style="font-size: 1.75rem; color: #7f8c8d; font-weight: 400;">My Entries</h2>
+    </header>
+</div>
+
+<div style="max-width: 500px; margin: auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.1);">
+    <div class="mb-3">
+        <label class="form-label fw-bold">Month</label>
+        <input type="number" class="form-control" @bind="searchDto.Month" min="1" max="12" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Year</label>
+        <input type="number" class="form-control" @bind="searchDto.Year" min="2000" max="2100" />
+    </div>
+
+    <button class="btn btn-primary w-100" style="padding: 10px; font-size: 1rem; font-weight: 500;" @onclick="HandleSubmit">
+        Search
+    </button>
+</div>
+@if (entries == null)
+{
+    <p style="text-align: center; font-size: 1.1rem; color: #7f8c8d;"></p>
+}
+else if (!entries.Any())
+{
+    <div class="mt-lg-4">
+        <p style="text-align: center; font-size: 1.1rem; color: #7f8c8d;">No work entries to display.</p>
+    </div>
+}
+else
+{
+    <div style="margin-top: 30px;">
+        <table class="table table-hover"
+               style="border-collapse: separate; border-spacing: 0; width: 100%; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 3px 8px rgba(0,0,0,0.1);">
+            <thead style="background-color: #2C3E50; color: white;">
+                <tr>
+                    <th style="padding: 0.8rem;">Employee ID</th>
+                    <th style="padding: 0.8rem;">Employee Name</th>
+                    <th style="padding: 0.8rem;">Date</th>
+                    <th style="padding: 0.8rem;">Duration</th>
+                    <th style="padding: 0.8rem;">Wage for Entry</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in entries)
+                {
+                    <tr style="border-bottom: 1px solid #ecf0f1;">
+                        <td style="padding: 0.8rem;">@entry.EmployeeId</td>
+                        <td style="padding: 0.8rem;">@entry.EmployeeName</td>
+                        <td style="padding: 0.8rem;">@entry.Date.ToString("yyyy-MM-dd")</td>
+                        <td style="padding: 0.8rem;">@entry.Duration.ToString(@"hh\:mm")</td>
+                        <td style="padding: 0.8rem;">@entry.WageForEntry.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr style="background-color: #1ABC9C; color: white; font-weight: bold;">
+                    <td style="padding: 0.8rem;" colspan="2">Total</td>
+                    <td></td>
+                    <td style="padding: 0.8rem;">@string.Format("{0}:{1:D2}", (int)TotalDuration.TotalHours, TotalDuration.Minutes)</td>
+                    <td style="padding: 0.8rem;">@TotalWage.ToString("C", new System.Globalization.CultureInfo("sv-SE"))</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+
+
+
+@code {
+    private WorkEntrySearchDto searchDto = new();
+    private IEnumerable<WorkEntryReadDto>? entries;
+    private System.TimeSpan TotalDuration => System.TimeSpan.FromMinutes(entries.Sum(e => e.Duration.TotalMinutes));
+    string? rid;
+
+    private double TotalWage => entries.Sum(e => e.WageForEntry);
+    private ApiResponse<IEnumerable<WorkEntryReadDto>>? apiResponse = new ApiResponse<IEnumerable<WorkEntryReadDto>> { Success = true };
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IEnumerable<Claim>? claims = await ((ApiAuthenticationStateProvider)authStateProvider).GetClaims();
+
+            if (claims == null)
+            {
+                navManager.NavigateTo("users/login");
+                return;
+            }
+
+            rid = claims.FirstOrDefault(x => x.Type == "rid")?.Value;
+
+            if (rid == null)
+            {
+                return;
+            }
+
+        }
+
+    }
+    private async Task HandleSubmit()
+    {
+        apiResponse = await workEntryService.GetWorkEntryBySearch(Convert.ToInt32(rid), searchDto);
+        if (apiResponse.Success)
+        {
+            entries = apiResponse.Data;
+            StateHasChanged();
+        }
+    }
+
+}
