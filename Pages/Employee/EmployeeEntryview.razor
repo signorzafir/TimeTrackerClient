@@ -10,53 +10,7 @@
  @inject IWorkEntryService workEntryService
  @inject NavigationManager navManager
  @inject IJSRuntime JSRuntime 
-
-
-
- @* <div>
-    @if (entries == null)
-    {
-        <p class="text-center">Loading...</p>
-    }
-    else if (!entries.Any())
-    {
-        <p>No work entries to display.</p>
-    }
-    else
-    {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Employee Id</th>
-                    <th>Employee Name</th>
-                    <th>Date</th>
-                    <th>Duration</th>
-                    <th>Wage for Entry</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var entry in entries)
-                {
-                    <tr>
-                        <td>@entry.EmployeeId</td>
-                        <td>@entry.EmployeeName</td>
-                        <td>@entry.Date.ToString("yyyy-MM-dd")</td>
-                        <td>@entry.Duration.ToString(@"hh\:mm")</td>
-                        <td>@entry.WageForEntry.ToString("C")</td>
-                    </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr class="fw-bold bg-primary text-white">
-                    <td colspan="2">Total</td>
-                    <td></td>
-                    <td>@string.Format("{0}:{1:D2}", (int)TotalDuration.TotalHours, TotalDuration.Minutes)</td>
-                    <td>@TotalWage.ToString("C")</td>
-                </tr>
-            </tfoot>
-        </table>
-    }
-</div> *@
+ 
 <header style="text-align: center; margin-bottom: 40px;">
     <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">TimeTracker Client</h1>
     <h2 style="font-size: 2.25rem; color: #555;">My Entries</h2>

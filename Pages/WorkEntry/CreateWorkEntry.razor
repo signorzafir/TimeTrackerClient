@@ -12,81 +12,36 @@
 @* @page "/employee/create-work-entry" *@
 @using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using TimeTrackerClient.Providers
 @using TimeTrackerClient.Services.Base
 @using TimeTrackerClient.Services.WorkEntry
 @attribute [Authorize(Roles = "User")]
 @inject IWorkEntryService WorkEntryService
-@inject NavigationManager Navigation
+@inject NavigationManager navManager
+@inject AuthenticationStateProvider authStateProvider
+
 @inject IJSRuntime JSRuntime
 
 
-@* @if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div style="color: red; margin-bottom: 10px;">
-        @errorMessage
-    </div>
-}
 
-@if (!string.IsNullOrEmpty(successMessage))
-{
-    <div style="color: green; margin-bottom: 10px;">
-        @successMessage
-    </div>
-}
-
-<form @onsubmit="HandleWorkEntry" @onsubmit:preventDefault="true">
-    <div>
-        <label for="date">Date:</label>
-        <input type="date" id="date" @bind="workEntry.Date" required />
-    </div>
-    <br />
-
-    <div>
-        <label for="hours">Hours:</label>
-        <input type="number" id="hours" @bind="hours" min="0" max="23" step="1" required />
-    </div>
-    <br />
-
-    <div>
-        <label for="minutes">Minutes:</label>
-        <input type="number" id="minutes" @bind="minutes" min="0" max="59" step="1" required />
-    </div>
-    <br />
-
-    <div>
-        <label for="employeeId">Employee ID:</label>
-        <input type="number" id="employeeId" @bind="workEntry.EmployeeId" required />
-    </div>
-    <br />
-
-    <button type="submit" disabled="@isLoading">
-        @if (isLoading)
-        {
-            <text>Creating...</text>
-        }
-        else
-        {
-            <text>Create Work Entry</text>
-        }
-    </button>
-</form> *@
 <header style="text-align: center; margin-bottom: 30px;">
     <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">TimeTracker Client</h1>
 </header>
+
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div style="color: #e74c3c; background-color: #fdecea; padding: 10px; border-radius: 6px; margin-bottom: 15px; max-width: 400px; text-align: center;">
+    <div class="alert alert-danger py-2 px-3 my-2 text-center mx-auto" style="max-width: 500px;">
         @errorMessage
     </div>
 }
 
 @if (!string.IsNullOrEmpty(successMessage))
 {
-    <div style="color: #27ae60; background-color: #eafaf1; padding: 10px; border-radius: 6px; margin-bottom: 15px; max-width: 400px; text-align: center;">
+    <div class="alert alert-success py-2 px-3 my-2 text-center mx-auto" style="max-width: 500px;">
         @successMessage
     </div>
 }
-
 <div style="display: flex; justify-content: center; align-items: center; min-height: 80vh; background-color: #f4f6f8; padding: 20px;">
     <form @onsubmit="HandleWorkEntry" @onsubmit:preventDefault="true"
           style="background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); max-width: 400px; width: 100%;">
@@ -95,7 +50,7 @@
 
         <div style="margin-bottom: 15px;">
             <label for="date" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Date</label>
-            <input type="date" id="date" @bind="workEntry.Date" required
+            <input type="date" id="date" @bind="workEntryDto.Date" required
                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
         </div>
 
@@ -111,12 +66,6 @@
                    style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <label for="employeeId" style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Employee ID</label>
-            <input type="number" id="employeeId" @bind="workEntry.EmployeeId" required
-                   style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
-        </div>
-
         <button type="submit" disabled="@isLoading"
                 style="width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease;">
             @if (isLoading)
@@ -129,16 +78,36 @@
             }
         </button>
     </form>
+    
 </div>
 
 
 @code {
-    private WorkEntryCreateDto workEntry = new ();
+    private WorkEntryCreateDto workEntryDto = new WorkEntryCreateDto{Date=DateTime.Today};
+    private string? rid;
     private int hours = 0;
     private int minutes = 0;
     private bool isLoading = false;
-    private string errorMessage = string.Empty;
-    private string successMessage = string.Empty;
+    private string? errorMessage ;
+    private string? successMessage;
+    protected override async Task OnInitializedAsync()
+    {
+
+        IEnumerable<Claim>? claims = await ((ApiAuthenticationStateProvider)authStateProvider).GetClaims();
+
+        if (claims == null)
+        {
+            navManager.NavigateTo("users/login");
+            return;
+        }
+
+        rid = claims.FirstOrDefault(x => x.Type == "rid")?.Value;
+
+        workEntryDto.EmployeeId = Convert.ToInt32( rid);
+
+
+
+    }
 
     private async Task HandleWorkEntry()
     {
@@ -149,17 +118,23 @@
             successMessage = string.Empty;
 
             // Convert hours and minutes to TimeSpan
-            workEntry.Duration = new System.TimeSpan(hours, minutes, 0);
+            workEntryDto.Duration = new System.TimeSpan(hours, minutes, 0);
 
-            var response = await WorkEntryService.CreateAsync(workEntry);
+            var response = await WorkEntryService.CreateAsync(workEntryDto);
 
             if (response.Success)
             {
                 successMessage = response.Message;
+                StateHasChanged();
+                await Task.Delay(3000);
+                successMessage = null;
                 // Reset form
-                workEntry = new WorkEntryCreateDto();
-                hours = 0;
-                minutes = 0;
+                workEntryDto = new WorkEntryCreateDto
+                {
+                    EmployeeId = Convert.ToInt32(rid),
+                    Date = DateTime.Today
+                };
+                
             }
             else
             {

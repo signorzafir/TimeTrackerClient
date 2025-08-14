@@ -1,7 +1,9 @@
 ﻿@page "/admin/employeeListWithCreateWorkEntry"
+@using Microsoft.AspNetCore.Authorization
 @using TimeTrackerClient.Services.Base
 @using TimeTrackerClient.Services.Employee
 @using TimeTrackerClient.Services.WorkEntry
+@attribute [Authorize(Roles = "Administrator")]
 @inject IEmployeeService employeeService
 @inject IWorkEntryService workEntryService
 
@@ -11,12 +13,7 @@
         <h2 style="font-size: 1.75rem; color: #7f8c8d; font-weight: 400;">Employees Overview</h2>
     </header>
 </div>
-@if (!string.IsNullOrEmpty(successMessage))
-{
-    <div class="alert alert-success" role="alert">
-        @successMessage
-    </div>
-}
+
 
 @if (rows is null)
 {
@@ -71,7 +68,12 @@ else
         </tbody>
     </table>
 }
-
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success" role="alert">
+        @successMessage
+    </div>
+}
 @code {
     private List<WorkEntryRow> rows;
     private List<EmployeeReadDto> employees = new();
@@ -117,6 +119,9 @@ else
 
         await workEntryService.CreateAsync(dto);
         successMessage = $"Work entry for {row.EmployeeName} registered successfully!";
+        StateHasChanged();
+        await Task.Delay(3000);
+        successMessage = null;
 
         // Optional reset
         row.Hours = 0;

@@ -30,50 +30,7 @@
 }
 else if (employee is not null)
 {
-    @* <div style="display: flex; justify-content: left; align-items: center; min-height: 70vh; background-color: #f4f6b8;">
-        <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px; max-width: 520px; margin-bottom: 30px; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <h4 style="margin-bottom: 15px; color: #34495e;">Profile Information</h4>
-            <p><strong>Personal Number:</strong> <span style="color: #555;">@employee.PersonalNumber</span></p>
-            <p><strong>Work Entries:</strong> <span style="color: #555;">@(employee.WorkEntries?.Count ?? 0)</span></p>
-        </div>
-    </div>
-    <div style="display: flex; justify-content: center; align-items: center; min-height: 70vh; background-color: #f4f6f8;">
-        <EditForm Model="updateDto" OnValidSubmit="HandleUpdate" style="max-width: 520px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <DataAnnotationsValidator />
-            <ValidationSummary style="color: red; margin-bottom: 15px;" />
-
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Full Name</label>
-                <InputText @bind-Value="updateDto.FullName" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Phone Number</label>
-                <InputText @bind-Value="updateDto.PhoneNumber" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Address</label>
-                <InputText @bind-Value="updateDto.Address" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Emergency Contact</label>
-                <InputText @bind-Value="updateDto.EmergencyContact" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
-            </div>
-
-            <div style="margin-bottom: 25px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Hourly Wage</label>
-                <InputNumber @bind-Value="updateDto.HourlyWage" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
-            </div>
-
-            <div>
-                <button type="submit" style="padding: 10px 18px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease;">
-                    Save Changes
-                </button>
-            </div>
-        </EditForm>
-    </div> *@
+    
     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 85vh; background-color: #f4f6f8; padding: 20px;">
 
         <!-- Profile Info -->
@@ -81,8 +38,7 @@ else if (employee is not null)
             <h4 style="margin-bottom: 15px; color: #34495e;">Profile Information</h4>
             <p><strong>Personal Number:</strong> <span style="color: #555;">@employee.PersonalNumber</span></p>
             <p><strong>Hourly Wage:</strong> <span style="color: #555;">@employee.HourlyWage</span></p>
-            @* <p><strong>User ID:</strong> <span style="color: #555;">@employee.UserId</span></p> *@
-            @* <p><strong>Work Entries:</strong> <span style="color: #555;">@(employee.WorkEntries?.Count ?? 0)</span></p> *@
+            
         </div>
 
         <!-- Update Form -->

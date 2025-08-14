@@ -1,7 +1,9 @@
 ﻿@page "/admin/workEntriesByEmployee"
+@using Microsoft.AspNetCore.Authorization
 @using TimeTrackerClient.Services.Base
 @using TimeTrackerClient.Services.Employee
 @using TimeTrackerClient.Services.WorkEntry
+@attribute [Authorize(Roles = "Administrator")]
 @inject IEmployeeService employeeService
 @inject IWorkEntryService workEntryService
 @inject IJSRuntime JSRuntime
