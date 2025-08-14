@@ -4,32 +4,14 @@
 @inject IAuthenticationService authService
 @inject NavigationManager navManager
 
-@* <h3>Login</h3>
+<div style="max-width: 900px; margin: 10px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
+    <header style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">TimeTracker Client</h1>
+        <h2 style="font-size: 2.25rem; color: #555;">Login</h2>
+    </header>
+</div>
 
-<div>
-    <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <InputText class="form-control" @bind-Value="LoginModel.Email" />
-            <ValidationMessage For="@(() => LoginModel.Email)" />
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <InputText class="form-control" @bind-Value="LoginModel.Password" />
-            <ValidationMessage For="@(() => LoginModel.Password)" />
-        </div>
-
-
-        <button type="submit" class="btn btn-primary">Login</button>
-    </EditForm>
-</div> *@
-<h3 style="text-align: center; margin-bottom: 1rem; font-family: Arial, sans-serif; color: #2C3E50;">
-    Login
-</h3>
-
-<div style="display: flex; justify-content: center; align-items: center; min-height: 70vh; background-color: #f4f6f8;">
+<div style="display: flex; justify-content: center; align-items: center; min-height: 60vh; background-color: #f4f6f8;">
     <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
         <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
             <DataAnnotationsValidator />

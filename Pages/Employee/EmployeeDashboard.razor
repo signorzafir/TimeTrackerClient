@@ -1,77 +1,12 @@
 ﻿@page "/employee/dashboard"
 @using Microsoft.AspNetCore.Components.Authorization
-@* <h3>EmployeeDashboard</h3>
-<AuthorizeView>
-    <Authorized>
-        <a class="btn btn-primary" href="/workEntry/create">Create Work Entry</a>
-    </Authorized>
 
-</AuthorizeView>
-<AuthorizeView>
-    <Authorized>
-        <a class="btn btn-primary" href="/employee/entries">View My Work Entries</a>
-    </Authorized>
-</AuthorizeView>
-<AuthorizeView>
-    <Authorized>
-        <a class="btn btn-primary" href="/employee/profile">View My Profile</a>
-    </Authorized>
-</AuthorizeView> *@
-@* <h3 style="color: #2C3E50; font-weight: bold; margin-bottom: 1.5rem;">Employee Dashboard</h3>
-
-<AuthorizeView>
-    <Authorized>
-        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-            <a class="btn" href="/workEntry/create"
-               style="background-color: #1ABC9C; color: white; font-weight: 500; border: none; padding: 0.8rem 1.2rem; border-radius: 8px; text-decoration: none; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: all 0.2s ease;">
-                ➕ Create Work Entry
-            </a>
-
-            <a class="btn" href="/employee/entries"
-               style="background-color: #3498DB; color: white; font-weight: 500; border: none; padding: 0.8rem 1.2rem; border-radius: 8px; text-decoration: none; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: all 0.2s ease;">
-                📄 View My Work Entries
-            </a>
-
-            <a class="btn" href="/employee/profile"
-               style="background-color: #9B59B6; color: white; font-weight: 500; border: none; padding: 0.8rem 1.2rem; border-radius: 8px; text-decoration: none; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: all 0.2s ease;">
-                👤 View My Profile
-            </a>
-        </div>
-    </Authorized>
-</AuthorizeView>
-
-<style>
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 10px rgba(0,0,0,0.15) !important;
-    }
-</style> *@
 <div style="max-width: 900px; margin: 10px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
     <header style="text-align: center; margin-bottom: 40px;">
         <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">TimeTracker Client</h1>
-        <h2 style="font-size: 2.25rem; color: #555;">Dashboard</h2>
+        <h2 style="font-size: 2.25rem; color: #555;">Employee Dashboard</h2>
     </header>
 </div>
-
-<AuthorizeView Roles="Administrator">
-    <Authorized>
-        <div style="max-width: 900px; margin: 10px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
-
-            <section style="display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
-                <div style="flex: 1 1 280px; background-color: #f1f4f8; border-radius: 12px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;">
-                    <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #34495e;">Employees List</h2>
-                    @* <p style="color: #555;">Update your personal information and hourly wage settings.</p> *@
-                    <a href="/admin/employees" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background-color: #2980b9; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">View Employees</a>
-                </div>
-                <div style="flex: 1 1 280px; background-color: #f1f4f8; border-radius: 12px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;">
-                    <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #34495e;">Manage Profile</h2>
-                    @* <p style="color: #555;">Update your personal information and hourly wage settings.</p> *@
-                    <a href="/employee/profile" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background-color: #2980b9; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">My Profile</a>
-                </div>
-            </section>
-        </div>
-    </Authorized>
-</AuthorizeView>
 <AuthorizeView>
     <Authorized>
         <div style="max-width: 900px; margin: 40px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
@@ -105,6 +40,18 @@
 
         </div>
     </Authorized>
+    <NotAuthorized>
+        <div style="max-width: 900px; margin: 40px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
+            <section style="display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+                <div style="flex: 1 1 280px; background-color: gray; border-radius: 12px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #34495e;">Authorization failed</h2>
+                    <a href="/users/login" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background-color: #2980b9; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Log In</a>
+                </div>
+            </section>
+
+
+        </div>
+    </NotAuthorized>
 
 </AuthorizeView>
 

@@ -2,6 +2,7 @@
 @using TimeTrackerClient.Services.Authentication
 @inject IAuthenticationService authService
 @inject NavigationManager navManager
+
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">TimeTrackerClient</a>
@@ -50,6 +51,17 @@
                 </div>
             </Authorized>
         </AuthorizeView>
+        <AuthorizeView Roles = "Administrator">
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/admin/dashboard">
+                        
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Admin Controlls
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
