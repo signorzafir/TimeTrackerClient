@@ -1,5 +1,6 @@
 ﻿@page "/registeremployee"
 @inject IEmployeeService employeeService
+@inject NavigationManager navManager
 @using System.Net.Http.Json
 @using System.ComponentModel.DataAnnotations
 @using TimeTrackerClient.Services.Base
@@ -145,10 +146,13 @@
         {
             successMessage = "Registration Successfull";
             dto = new(); // Clear form
+
+            navManager.NavigateTo("/users/login");
         }
         else
         {
             errorMessage = response.Message ?? "Registration failed.";
         }
     }
+
 }
