@@ -1,32 +1,41 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Components.Authorization
 
-<PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<AuthorizeView Roles ="Administrator">
-    <h2>You Are Administrator</h2>
-
-</AuthorizeView>
-
-<div>
+<div style="max-width: 700px; margin: 60px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50; text-align: center;">
+    <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 20px;">Welcome to TimeTrackerClient</h1>
+    <p style="font-size: 1.25rem; margin-bottom: 40px; color: #555;">
+        Keep track of your work hours and calculate wages easily.<br />
+    </p>
     <AuthorizeView>
-        <Authorized>
-            <p>This text will show to authorized person</p>
-        </Authorized>
         <NotAuthorized>
-            <p>This text will show to every person with out logged in</p>
-
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <a href="registeremployee" style="background-color: #4CAF50; color: white; padding: 14px 28px; border-radius: 8px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 8px rgba(76,175,80,0.3);">
+                    Register
+                </a>
+                <a href="users/login" style="background-color: #2980b9; color: white; padding: 14px 28px; border-radius: 8px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 8px rgba(41,128,185,0.3);">
+                    Login
+                </a>
+            </div>
         </NotAuthorized>
     </AuthorizeView>
-</div>
+    <AuthorizeView>
+        <Authorized>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                <a href="employee/dashboard" style="background-color: #4CAF50; color: white; padding: 14px 28px; border-radius: 8px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 8px rgba(76,175,80,0.3);">
+                    My Dashboard
+                </a>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+    
 
-<AuthorizeView Roles ="User">
-    <h2>You are regular User</h2>
-</AuthorizeView>
+    
+
+    <footer style="margin-top: 80px; color: #999; font-size: 0.9rem;">
+        <p>© 2025 TimeTrackerClient. All rights reserved.</p>
+    </footer>
+</div>
 
 
 

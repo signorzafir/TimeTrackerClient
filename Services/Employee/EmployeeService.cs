@@ -113,10 +113,10 @@ namespace TimeTrackerClient.Services.Employee
                     Message = "Employee updated successfully"
                 };
             }
-            catch (ApiException ex)
-            {
-                return ConvertApiExceptions<bool>(ex);
-            }
+            //catch (ApiException ex)
+            //{
+            //    return ConvertApiExceptions<bool>(ex);
+            //}
             catch (Exception ex)
             {
                 return new ApiResponse<bool>
@@ -170,10 +170,10 @@ namespace TimeTrackerClient.Services.Employee
                     Message = "Employee Registered successfully"
                 };
             }
-            catch (ApiException ex)
-            {
-                return ConvertApiExceptions<bool>(ex);
-            }
+            //catch (ApiException ex)
+            //{
+            //    return ConvertApiExceptions<bool>(ex);
+            //}
             catch (Exception ex)
             {
                 return new ApiResponse<bool>

@@ -7,65 +7,74 @@
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider authStateProvider
 
-<h3 style="margin-bottom: 20px;">My Profile</h3>
+
+<header style="text-align: center; margin-bottom: 30px;">
+    <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">TimeTracker Client</h1>
+</header>
+
+
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div style="color: red; margin-bottom: 10px;">@errorMessage</div>
+    <div style="color: red; margin-bottom: 15px; font-weight: 600;">@errorMessage</div>
 }
 
 @if (!string.IsNullOrEmpty(successMessage))
 {
-    <div style="color: green; margin-bottom: 10px;">@successMessage</div>
+    <div style="color: green; margin-bottom: 15px; font-weight: 600;">@successMessage</div>
 }
 
 @if (isLoading)
 {
-    <p>Loading profile...</p>
+    <p style="color: #777; font-style: italic;">Loading profile...</p>
 }
 else if (employee is not null)
 {
-    <div style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; max-width: 500px; margin-bottom: 20px;">
-        <h4 style="margin-bottom: 10px;">Profile Information</h4>
-        <p><strong>Personal Number:</strong> @employee.PersonalNumber</p>
-        @* <p><strong>User ID:</strong> @employee.UserId</p> *@
-        <p><strong>Work Entries:</strong> @(employee.WorkEntries?.Count ?? 0)</p>
+    
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 85vh; background-color: #f4f6f8; padding: 20px;">
+
+        <!-- Profile Info -->
+        <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px; max-width: 520px; width: 100%; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
+            <h4 style="margin-bottom: 15px; color: #34495e;">Profile Information</h4>
+            <p><strong>Personal Number:</strong> <span style="color: #555;">@employee.PersonalNumber</span></p>
+            <p><strong>Hourly Wage:</strong> <span style="color: #555;">@employee.HourlyWage</span></p>
+            
+        </div>
+
+        <!-- Update Form -->
+        <EditForm Model="updateDto" OnValidSubmit="HandleUpdate" style="max-width: 520px; width: 100%; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            <DataAnnotationsValidator />
+            <ValidationSummary style="color: red; margin-bottom: 15px;" />
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Full Name</label>
+                <InputText @bind-Value="updateDto.FullName" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Phone Number</label>
+                <InputText @bind-Value="updateDto.PhoneNumber" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Address</label>
+                <InputText @bind-Value="updateDto.Address" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50;">Emergency Contact</label>
+                <InputText @bind-Value="updateDto.EmergencyContact" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+            </div>
+
+            <div>
+                <button type="submit" style="padding: 10px 18px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease;">
+                    Save Changes
+                </button>
+            </div>
+        </EditForm>
     </div>
-
-    <EditForm Model="updateDto" OnValidSubmit="HandleUpdate" style="max-width: 500px;">
-        <DataAnnotationsValidator />
-        <ValidationSummary style="color: red;" />
-
-        <div style="margin-bottom: 10px;">
-            <label>Full Name</label>
-            <InputText @bind-Value="updateDto.FullName" style="width: 100%; padding: 5px;" />
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label>Phone Number</label>
-            <InputText @bind-Value="updateDto.PhoneNumber" style="width: 100%; padding: 5px;" />
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label>Address</label>
-            <InputText @bind-Value="updateDto.Address" style="width: 100%; padding: 5px;" />
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label>Emergency Contact</label>
-            <InputText @bind-Value="updateDto.EmergencyContact" style="width: 100%; padding: 5px;" />
-        </div>
-
-        <div style="margin-bottom: 10px;">
-            <label>Hourly Wage</label>
-            <InputNumber @bind-Value="updateDto.HourlyWage" style="width: 100%; padding: 5px;" />
-        </div>
-
-        <div style="margin-top: 15px;">
-            <button type="submit" style="padding: 6px 12px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Save Changes</button>
-        </div>
-    </EditForm>
 }
+
 
 @code {
     private EmployeeReadDto? employee;
@@ -135,6 +144,11 @@ else if (employee is not null)
         if (response.Success)
         {
             successMessage = response.Message;
+            StateHasChanged();
+
+            await Task.Delay(3000);
+            successMessage = null;
+
 
             // Refresh employee data
             var refreshed = await employeeService.GetEmployeeByIdAsync(userEmployeeId);

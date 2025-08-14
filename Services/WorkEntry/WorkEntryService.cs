@@ -3,7 +3,7 @@ using TimeTrackerClient.Services.Base;
 
 namespace TimeTrackerClient.Services.WorkEntry
 {
-    public class WorkEntryService: BaseHttpService, IWorkEntryService
+    public class WorkEntryService : BaseHttpService, IWorkEntryService
     {
         private readonly IClient client;
 
@@ -58,14 +58,14 @@ namespace TimeTrackerClient.Services.WorkEntry
             {
                 return ConvertApiExceptions<WorkEntryReadDto>(ex);
             }
-            catch (Exception ex)
-            {
-                return new ApiResponse<WorkEntryReadDto>
-                {
-                    Success = false,
-                    Message = "An unexpected error occurred while creating the work entry"
-                };
-            }
+            //catch (Exception ex)
+            //{
+            //    return new ApiResponse<WorkEntryReadDto>
+            //    {
+            //        Success = false,
+            //        Message = "An unexpected error occurred while creating the work entry"
+            //    };
+            //}
         }
 
         public async Task<ApiResponse<WorkEntryReadDto>> GetByIdAsync(int id)
@@ -147,6 +147,34 @@ namespace TimeTrackerClient.Services.WorkEntry
                 {
                     Success = false,
                     Message = "An unexpected error occurred while deleting the work entry"
+                };
+            }
+        }
+
+        public async Task<ApiResponse<IEnumerable<WorkEntryReadDto>>> GetWorkEntryBySearch(int employeeId, WorkEntrySearchDto workEntrySearchDto)
+        {
+            try
+            {
+                await GetBearerToken();
+                var entries = await client.GetWorkEntryBySearchAndEmployeeIdAsync(employeeId, workEntrySearchDto);
+                return new ApiResponse<IEnumerable<WorkEntryReadDto>>
+                {
+                    Data = entries,
+                    Success = true
+                };
+
+            }
+            catch (ApiException ex)
+            {
+                return ConvertApiExceptions<IEnumerable<WorkEntryReadDto>>(ex);
+            }
+            catch (Exception)
+            {
+
+                return new ApiResponse<IEnumerable<WorkEntryReadDto>>
+                {
+                    Success = false,
+                    Message = "An unexpected error occurred while Loading entries"
                 };
             }
         }

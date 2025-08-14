@@ -1,0 +1,66 @@
+﻿@page "/employee/dashboard"
+@using Microsoft.AspNetCore.Components.Authorization
+
+<div style="max-width: 900px; margin: 10px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
+    <header style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">TimeTracker Client</h1>
+        <h2 style="font-size: 2.25rem; color: #555;">Employee Dashboard</h2>
+    </header>
+</div>
+<AuthorizeView>
+    <Authorized>
+        <div style="max-width: 900px; margin: 40px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
+
+
+            <section style="display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+                <div style="flex: 1 1 280px; background-color: #f1f4f8; border-radius: 12px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #34495e;">Register Work Entry</h2>
+                    @* <p style="color: #555;">Easily create and manage your daily work entries to keep precise records.</p> *@
+                    <a href="/workEntry/create" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background-color: #2980b9; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Create Entry</a>
+                </div>
+
+                <div style="flex: 1 1 280px; background-color: #f1f4f8; border-radius: 12px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #34495e;">View Work Entries</h2>
+                    @* <p style="color: #555;">Browse and review all your logged work hours in one place.</p> *@
+                    <a href="/employee/entries" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background-color: #2980b9; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">My Entries</a>
+                </div>
+
+                <div style="flex: 1 1 280px; background-color: #f1f4f8; border-radius: 12px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #34495e;">Manage Profile</h2>
+                    @* <p style="color: #555;">Update your personal information and hourly wage settings.</p> *@
+                    <a href="/employee/profile" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background-color: #2980b9; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">My Profile</a>
+                </div>
+                <div style="flex: 1 1 280px; background-color: #f1f4f8; border-radius: 12px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #34495e;">Search By Month</h2>
+                    @* <p style="color: #555;">Update your personal information and hourly wage settings.</p> *@
+                    <a href="/employee/searchworkentry" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background-color: #2980b9; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Month Report</a>
+                </div>
+            </section>
+
+
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div style="max-width: 900px; margin: 40px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
+            <section style="display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+                <div style="flex: 1 1 280px; background-color: gray; border-radius: 12px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 16px; color: #34495e;">Authorization failed</h2>
+                    <a href="/users/login" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background-color: #2980b9; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Log In</a>
+                </div>
+            </section>
+
+
+        </div>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+<footer style="margin-top: 60px; text-align: center; color: #999; font-size: 0.9rem;">
+    <p>© 2025 TimeTrackerClient. All rights reserved.</p>
+</footer>
+
+
+
+@code {
+
+}

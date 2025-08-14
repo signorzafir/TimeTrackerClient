@@ -4,27 +4,47 @@
 @inject IAuthenticationService authService
 @inject NavigationManager navManager
 
-<h3>Login</h3>
-
-<div>
-    <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <InputText class="form-control" @bind-Value="LoginModel.Email" />
-            <ValidationMessage For="@(() => LoginModel.Email)" />
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <InputText class="form-control" @bind-Value="LoginModel.Password" />
-            <ValidationMessage For="@(() => LoginModel.Password)" />
-        </div>
-
-
-        <button type="submit" class="btn btn-primary">Login</button>
-    </EditForm>
+<div style="max-width: 900px; margin: 10px auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2c3e50;">
+    <header style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">TimeTracker Client</h1>
+        <h2 style="font-size: 2.25rem; color: #555;">Login</h2>
+    </header>
 </div>
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: 60vh; background-color: #f4f6f8;">
+    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
+        <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary style="color: #e74c3c; font-size: 0.9rem;" />
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="email" style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Email Address</label>
+                <InputText type="email" class="form-control"
+                           @bind-Value="LoginModel.Email"
+                           style="width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px;" />
+                <ValidationMessage For="@(() => LoginModel.Email)" style="color: #e74c3c; font-size: 0.85rem;" />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="password" style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Password</label>
+                <InputText type="password" class="form-control"
+                           @bind-Value="LoginModel.Password"
+                           style="width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 5px;" />
+                <ValidationMessage For="@(() => LoginModel.Password)" style="color: #e74c3c; font-size: 0.85rem;" />
+            </div>
+
+            <button type="submit"
+                    style="width: 100%; background-color: #3498db; color: white; padding: 0.7rem; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: background-color 0.2s ease;">
+                Login
+            </button>
+        </EditForm>
+
+        <div style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+            <span>Don't have an account? <a href="registeremployee" style="color: #3498db; text-decoration: none;">Register</a></span>
+        </div>
+    </div>
+</div>
+
 
 
 @code {
@@ -38,7 +58,7 @@
             var response = await authService.AuthenticateAsync(LoginModel);
             if (response)
             {
-                navManager.NavigateTo("/");
+                navManager.NavigateTo("/employee/dashboard");
             }
             message = "Invalid Credentials";
         }
